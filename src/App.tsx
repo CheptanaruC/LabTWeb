@@ -25,56 +25,49 @@ function SubmenuContent() {
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>, field: string) => {
     const { value } = e.target;
-    if (field === 'input2' || field === 'input3') {
-      // Validare doar pentru litere (fără cifre)
-      const newValue = value.replace(/[0-9]/g, '');
-      setFormData({
-        ...formData,
-        [field]: newValue
-      });
-    } else {
-      setFormData({
-        ...formData,
-        [field]: value
-      });
-    }
+    // Validating for numbers (only for the first input)
+    const newValue = field === 'input1' ? value.replace(/\D/g, '') : value.replace(/[0-9]/g, '');
+    setFormData({
+      ...formData,
+      [field]: newValue
+    });
   };
 
   const handleSubmit = () => {
-    console.log('Datele introduse:', formData);
+    console.log('Submitted Data:', formData);
     setSubmittedData(formData);
-    alert('Datele au fost trimise cu succes!');
+    alert('Data has been successfully submitted!');
   };
 
   return (
-    <Card title="Informații personale">
+    <Card title="Personal Information" style={{ backgroundColor: '#f0f2f5' }}>
       <div style={{ marginTop: '20px' }}>
         <Input
-          placeholder="N. Tel."
+          placeholder="Phone Number"
           style={{ marginBottom: '10px' }}
           value={formData.input1}
           onChange={(e) => handleInputChange(e, 'input1')}
         />
         <Input
-          placeholder="Nume"
+          placeholder="Last Name"
           style={{ marginBottom: '10px' }}
           value={formData.input2}
           onChange={(e) => handleInputChange(e, 'input2')}
         />
         <Input
-          placeholder="Prenume"
+          placeholder="First Name"
           style={{ marginBottom: '10px' }}
           value={formData.input3}
           onChange={(e) => handleInputChange(e, 'input3')}
         />
-        <Button type="primary" onClick={handleSubmit}>Trimite</Button>
+        <Button type="primary" onClick={handleSubmit}>Submit</Button>
       </div>
       {submittedData && (
         <div style={{ marginTop: '20px' }}>
-          <h3>Datele introduse:</h3>
-          <p>N. Tel.: {submittedData.input1}</p>
-          <p>Nume: {submittedData.input2}</p>
-          <p>Prenume: {submittedData.input3}</p>
+          <h3>Submitted Data:</h3>
+          <p>Phone Number: {submittedData.input1}</p>
+          <p>Last Name: {submittedData.input2}</p>
+          <p>First Name: {submittedData.input3}</p>
         </div>
       )}
     </Card>
@@ -94,6 +87,7 @@ const App = () => {
         style={{
           display: 'flex',
           alignItems: 'center',
+          backgroundColor: '#001529', // Change header background color
         }}
       >
         <div className="demo-logo" />
@@ -121,9 +115,9 @@ const App = () => {
             margin: '16px 0',
           }}
         >
-          <Breadcrumb.Item>Acasa</Breadcrumb.Item>
-          <Breadcrumb.Item>Lista</Breadcrumb.Item>
-          <Breadcrumb.Item>Aplicatie</Breadcrumb.Item>
+          <Breadcrumb.Item>Home</Breadcrumb.Item>
+          <Breadcrumb.Item>List</Breadcrumb.Item>
+          <Breadcrumb.Item>Application</Breadcrumb.Item>
         </Breadcrumb>
         <Layout
           style={{
