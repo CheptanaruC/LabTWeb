@@ -1,160 +1,119 @@
 import React, { useState } from 'react';
-import { LaptopOutlined, NotificationOutlined, UserOutlined } from '@ant-design/icons';
-import { Breadcrumb, Layout, Menu, Card, Input, Button } from 'antd';
+import ModalForm from '../ModalForm';
 
-const items1 = ['1', '2', '3'].map((key) => ({
-  key,
-  label: `nav ${key}`,
-}));
+import { Button, Layout, theme } from 'antd';
+import ProductCard from '../cards/ProductCard';
+import MenuContainer from './MenuContainer';
+import Smartphone from '../models/Smartphone';
 
-const items2 = [
-  { key: '1', icon: <UserOutlined />, label: 'Card', content: SubmenuContent },
-  { key: '2', icon: <LaptopOutlined />, label: '2', content: 'buttonul 2' },
-  { key: '3', icon: <NotificationOutlined />, label: '3', content: 'buttonul 3' },
-];
 
-const initialFormData = {
-  input1: '',
-  input2: '',
-  input3: ''
-};
+const { Header, Content, Footer, Sider } = Layout;
 
-function SubmenuContent() {
-  const [formData, setFormData] = useState(initialFormData);
-  const [submittedData, setSubmittedData] = useState<any>(null);
 
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>, field: string) => {
-    const { value } = e.target;
-    // Validating for numbers (only for the first input)
-    const newValue = field === 'input1' ? value.replace(/\D/g, '') : value.replace(/[0-9]/g, '');
-    setFormData({
-      ...formData,
-      [field]: newValue
-    });
+
+const initialData:Smartphone[] = [
+  {
+   name: "iPhone",
+   model: "16 Pro Max",
+   description: "Description",
+   imageUrl:"https://www.cnet.com/a/img/resize/928c0a57c0573d2148a2136c85f73ae195aad4ee/hub/2023/09/18/c17e2b8e-2c0d-4cd4-ba81-6803e624d843/iphone15-pro-4.jpg?auto=webp&fit=crop&height=1200&width=1200",
+   price: 1500,
+   quantity: 10,
+   RAM:8,
+   OS:"IOS",
+   camera:12
+  },
+  {
+    name: "Samsung",
+    model: "S24 Ultra",
+    description: "Description",
+    imageUrl:"https://image-us.samsung.com/us/smartphones/galaxy-s24/all-gallery/01_E3_OnlineExclusive_TitaniumBlue_Lockup_1600x1200.jpg?$product-details-jpg$",
+    price: 1200,
+    quantity: 10,
+    RAM:8,
+    OS:"Android",
+    camera:12
+   }
+]; 
+
+
+const App: React.FC = () => {
+  const {
+    token: { colorBgContainer, borderRadiusLG },
+  } = theme.useToken();
+
+  const [isModalVisible, setIsModalVisible] = useState(false);
+  const [cardData, setCardData] = useState<Smartphone[]>(initialData);
+  const showModal = () => {
+    setIsModalVisible(true);
+  };
+  const handleCancel = () => {
+    
+    setIsModalVisible(false);
+   
   };
 
-  const handleSubmit = () => {
-    console.log('Submitted Data:', formData);
-    setSubmittedData(formData);
-    alert('Data has been successfully submitted!');
+  const handleFormSubmit = ( CardProduct: Smartphone) => {
+    console.log("Handle submit")
+    console.log(CardProduct)
+    setCardData([...cardData, CardProduct]);
+    console.log("final card data");
+    console.log(cardData);
+
+    setIsModalVisible(false);
   };
 
-  return (
-    <Card title="Personal Information" style={{ backgroundColor: '#f0f2f5' }}>
-      <div style={{ marginTop: '20px' }}>
-        <Input
-          placeholder="Phone Number"
-          style={{ marginBottom: '10px' }}
-          value={formData.input1}
-          onChange={(e) => handleInputChange(e, 'input1')}
-        />
-        <Input
-          placeholder="Last Name"
-          style={{ marginBottom: '10px' }}
-          value={formData.input2}
-          onChange={(e) => handleInputChange(e, 'input2')}
-        />
-        <Input
-          placeholder="First Name"
-          style={{ marginBottom: '10px' }}
-          value={formData.input3}
-          onChange={(e) => handleInputChange(e, 'input3')}
-        />
-        <Button type="primary" onClick={handleSubmit}>Submit</Button>
-      </div>
-      {submittedData && (
-        <div style={{ marginTop: '20px' }}>
-          <h3>Submitted Data:</h3>
-          <p>Phone Number: {submittedData.input1}</p>
-          <p>Last Name: {submittedData.input2}</p>
-          <p>First Name: {submittedData.input3}</p>
-        </div>
-      )}
-    </Card>
-  );
+const emptyCard:Smartphone = {
+  name: "",
+  description: "",
+  model: "",
+  quantity: 0,
+  price: 0,
+  imageUrl: "",
+  RAM: 0,
+  OS: "",
+  camera: 0
 }
 
-const App = () => {
-  const [selectedMenu, setSelectedMenu] = useState<string>('1');
-
-  const handleMenuClick = (key: string) => {
-    setSelectedMenu(key);
-  };
+console.log(cardData);
 
   return (
-    <Layout>
-      <Layout.Header
-        style={{
-          display: 'flex',
-          alignItems: 'center',
-          backgroundColor: '#001529', // Change header background color
-        }}
+    <Layout hasSider>
+      <Sider
+        style={{ overflow: 'auto', height: '100vh', position: 'fixed', left: 0, top: 0, bottom: 0 }}
       >
-        <div className="demo-logo" />
-        <Menu
-          theme="dark"
-          mode="horizontal"
-          defaultSelectedKeys={['2']}
-          style={{
-            flex: 1,
-            minWidth: 0,
-          }}
-        >
-          {items1.map(item => (
-            <Menu.Item key={item.key}>{item.label}</Menu.Item>
-          ))}
-        </Menu>
-      </Layout.Header>
-      <Layout.Content
-        style={{
-          padding: '0 48px',
-        }}
-      >
-        <Breadcrumb
-          style={{
-            margin: '16px 0',
-          }}
-        >
-          <Breadcrumb.Item>Home</Breadcrumb.Item>
-          <Breadcrumb.Item>List</Breadcrumb.Item>
-          <Breadcrumb.Item>Application</Breadcrumb.Item>
-        </Breadcrumb>
-        <Layout
-          style={{
-            padding: '24px 0',
-          }}
-        >
-          <Layout.Sider
+        <div className="demo-logo-vertical" />
+      <MenuContainer/>
+      </Sider>
+      <Layout style={{ marginLeft: 200 }}>
+        <Header style={{ padding: 0, background: colorBgContainer }} >
+        <Button type="primary" onClick={showModal} style={{ marginBottom: 16, marginLeft:16}}>
+            Add product
+          </Button>
+          <ModalForm visible={isModalVisible} onCancel={handleCancel} onSubmit={handleFormSubmit} card = {emptyCard} />
+         
+        </Header>
+        <Content style={{ margin: '24px 16px 0', overflow: 'initial' }}>
+          <div
             style={{
-              background: '#fff',
-            }}
-            width={200}
-          >
-            <Menu
-              mode="inline"
-              defaultSelectedKeys={['1']}
-              defaultOpenKeys={['sub1']}
-              style={{
-                height: '100%',
-              }}
-            >
-              {items2.map(item => (
-                <Menu.Item key={item.key} icon={item.icon} onClick={() => handleMenuClick(item.key)}>
-                  {item.label}
-                </Menu.Item>
-              ))}
-            </Menu>
-          </Layout.Sider>
-          <Layout.Content
-            style={{
-              padding: '0 24px',
-              minHeight: 280,
+              padding: 24,
+              textAlign: 'center',
+              background: colorBgContainer,
+              borderRadius: borderRadiusLG,
             }}
           >
-            {selectedMenu === '1' && <SubmenuContent />}
-          </Layout.Content>
-        </Layout>
-      </Layout.Content>
+             <div style={{display:'flex',flexDirection:'row',gap:10 }}>{cardData.map((card , index) => (
+        <ProductCard key={index} smartphone={card} />
+      ))}</div>
+
+
+          </div>
+
+        </Content>
+        <Footer style={{ textAlign: 'center' }}>
+          Ant Design ©{new Date().getFullYear()} Created by Ant UED
+        </Footer>
+      </Layout>
     </Layout>
   );
 };
